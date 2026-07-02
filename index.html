@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mein Haushaltsbuch</title>
+<meta name="description" content="Trage deine Einnahmen und Ausgaben ein. Einfach und in deiner Sprache.">
+<meta name="theme-color" content="#1a365d">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Haushaltsbuch">
+<style>
+  :root {
+    --navy: #1a365d;
+    --navy-light: #2c5282;
+    --accent: #2b7a78;
+    --bg: #f7f8fa;
+    --border: #e2e8f0;
+    --text: #1a202c;
+    --text-light: #718096;
+    --card: #ffffff;
+    --income: #276749;
+    --income-bg: #e6f4ea;
+    --expense: #9b2c2c;
+    --expense-bg: #fbe9e9;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Poppins', -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0 0 48px;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+  .app-shell { max-width: 520px; margin: 0 auto; }
+
+  /* Kopfbereich */
+  header.top {
+    background: linear-gradient(135deg, var(--navy), var(--navy-light));
+    color: #fff;
+    padding: 28px 20px 22px;
+    border-radius: 0 0 20px 20px;
+  }
+  header.top h1 { margin: 0 0 4px; font-size: 1.55rem; font-weight: 600; }
+  header.top p { margin: 0; color: #cbd5e0; font-size: 0.98rem; }
+
+  #install-banner {
+    display: none;
+    margin: 14px 20px 0;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.28);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #fff;
+    font-size: 0.92rem;
+  }
+  #install-banner.show { display: block; }
+  #install-banner button {
+    margin-top: 8px;
+    background: #fff;
+    color: var(--navy);
+    border: none;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+
+  main { padding: 18px 16px 0; }
+  section { margin-bottom: 22px; }
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin: 0 0 10px;
+  }
+
+  /* Monatsnavigation */
+  .month-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 8px 8px;
+  }
+  .month-nav button {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    border: none;
+    background: var(--bg);
+    color: var(--navy);
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .month-nav button:active { background: var(--border); }
+  .month-nav .month-label {
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-transform: capitalize;
+  }
+
+  /* Übersichtskarten */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .summary-grid .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .summary-grid .card .label {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+  .summary-grid .card .value {
+    font-size: 1.02rem;
+    font-weight: 700;
+    word-break: break-word;
+  }
+  .card.income { border-top: 4px solid var(--income); }
+  .card.expense { border-top: 4px solid var(--expense); }
+  .card.balance { border-top: 4px solid var(--navy); }
+  .card.income .value { color: var(--income); }
+  .card.expense .value { color: var(--expense); }
+
+  /* Diagramme */
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .chart-card + .chart-card { margin-top: 14px; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 12px; }
+  .chart-legend .item { display: flex; align-items: center; gap: 6px; font-size: 0.86rem; color: var(--text); }
+  .chart-legend .dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+  .empty-hint { color: var(--text-light); font-size: 0.92rem; text-align: center; padding: 10px 4px; }
+
+  /* Formular */
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .type-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 16px;
+  }
+  .type-toggle label {
+    text-align: center;
+    padding: 10px 6px;
+    border-radius: 9px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    color: var(--text-light);
+  }
+  .type-toggle input { display: none; }
+  .type-toggle input:checked + span { display: block; }
+  .type-toggle .opt-einnahme input:checked ~ label,
+  .type-toggle label.active-einnahme { background: var(--income-bg); color: var(--income); }
+  .type-toggle label.active-ausgabe { background: var(--expense-bg); color: var(--expense); }
+
+  .field { margin-bottom: 16px; }
+  .field label.field-label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .amount-wrap { position: relative; }
+  .amount-wrap input {
+    width: 100%;
+    font-size: 1.6rem;
+    font-weight: 700;
+    padding: 12px 44px 12px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    color: var(--text);
+  }
+  .amount-wrap span {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    color: var(--text-light); font-size: 1.1rem; font-weight: 600;
+  }
+  input, select, textarea {
+    font-family: inherit;
+    font-size: 1rem;
+  }
+  input[type=date], textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    background: #fff;
+  }
+  textarea { resize: vertical; min-height: 46px; }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .category-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 4px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.72rem;
+    color: var(--text);
+    line-height: 1.2;
+    text-align: center;
+  }
+  .category-btn svg { width: 22px; height: 22px; }
+  .category-btn.selected {
+    border-color: var(--accent);
+    background: #eaf5f4;
+    color: var(--navy);
+  }
+  .category-btn.selected svg { stroke: var(--accent); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 1.02rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .btn-primary:active { background: var(--navy-light); }
+  .btn-secondary {
+    width: 100%;
+    background: #fff;
+    color: var(--text-light);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+
+  /* Liste der Einträge */
+  .day-group { margin-bottom: 14px; }
+  .day-group .day-label {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    font-weight: 600;
+    margin: 0 0 6px 4px;
+    text-transform: capitalize;
+  }
+  .entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 11px 12px;
+    margin-bottom: 8px;
+  }
+  .entry .icon-wrap {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .entry.type-einnahme .icon-wrap { background: var(--income-bg); }
+  .entry.type-ausgabe .icon-wrap { background: var(--expense-bg); }
+  .entry .icon-wrap svg { width: 20px; height: 20px; }
+  .entry.type-einnahme .icon-wrap svg { stroke: var(--income); }
+  .entry.type-ausgabe .icon-wrap svg { stroke: var(--expense); }
+  .entry .info { flex: 1; min-width: 0; }
+  .entry .info .cat { font-weight: 600; font-size: 0.94rem; }
+  .entry .info .note { font-size: 0.82rem; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .entry .amount { font-weight: 700; font-size: 0.98rem; white-space: nowrap; }
+  .entry.type-einnahme .amount { color: var(--income); }
+  .entry.type-ausgabe .amount { color: var(--expense); }
+  .entry .row-actions { display: flex; gap: 4px; flex-shrink: 0; }
+  .entry .row-actions button {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: var(--bg);
+    color: var(--text-light);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .entry .row-actions button svg { width: 16px; height: 16px; }
+
+  /* Export */
+  .export-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .export-row button {
+    padding: 13px 8px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .export-row button svg { width: 17px; height: 17px; stroke: var(--navy); }
+
+  footer.info {
+    padding: 6px 20px 0;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.82rem;
+  }
+  footer.info a { color: var(--accent); }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+
+  /* Druckansicht für den PDF-Export */
+  @media print {
+    header.top, #install-banner, .month-nav, .chart-card, .form-card,
+    .export-row, footer.info { display: none !important; }
+    body { background: #fff; padding: 0; font-size: 12pt; }
+    #print-report { display: block !important; }
+  }
+  #print-report { display: none; padding: 20px; }
+  #print-report h1 { color: var(--navy); }
+  #print-report table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  #print-report th, #print-report td {
+    text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 11pt;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <header class="top">
+    <h1>Mein Haushaltsbuch</h1>
+    <p>Trage ein, was reinkommt und was rausgeht.</p>
+    <div id="install-banner">
+      <span id="install-text">Du kannst dir diese App auf dein Handy laden. Ohne App Store.</span><br>
+      <button id="install-btn" type="button">App installieren</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section aria-label="Monat auswählen">
+      <div class="month-nav">
+        <button type="button" id="prev-month" aria-label="Vorheriger Monat">‹</button>
+        <span class="month-label" id="month-label">Monat</span>
+        <button type="button" id="next-month" aria-label="Nächster Monat">›</button>
+      </div>
+    </section>
+
+    <section aria-label="Überblick für diesen Monat">
+      <div class="summary-grid">
+        <div class="card income">
+          <div class="label">Einnahmen</div>
+          <div class="value" id="sum-income">0 €</div>
+        </div>
+        <div class="card expense">
+          <div class="label">Ausgaben</div>
+          <div class="value" id="sum-expense">0 €</div>
+        </div>
+        <div class="card balance">
+          <div class="label">Bleibt übrig</div>
+          <div class="value" id="sum-balance">0 €</div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Diagramme">
+      <h2>Dein Überblick</h2>
+      <div class="chart-card">
+        <strong style="font-size:0.9rem;color:var(--text-light);">Einnahmen und Ausgaben, letzte 6 Monate</strong>
+        <svg id="bar-chart" viewBox="0 0 320 170" style="width:100%;height:auto;margin-top:8px;"></svg>
+        <div class="chart-legend">
+          <span class="item"><span class="dot" style="background:var(--income);"></span>Einnahmen</span>
+          <span class="item"><span class="dot" style="background:var(--expense);"></span>Ausgaben</span>
+        </div>
+      </div>
+      <div class="chart-card">
+        <strong style="font-size:0.9rem;color:var(--text-light);">Ausgaben nach Bereich, dieser Monat</strong>
+        <div id="donut-wrap" style="display:flex;align-items:center;gap:18px;margin-top:8px;">
+          <svg id="donut-chart" viewBox="0 0 160 160" style="width:130px;height:130px;flex-shrink:0;"></svg>
+          <div class="chart-legend" id="donut-legend" style="flex-direction:column;gap:6px;margin-top:0;"></div>
+        </div>
+        <p class="empty-hint" id="donut-empty" style="display:none;">Noch keine Ausgaben in diesem Monat.</p>
+      </div>
+    </section>
+
+    <section aria-label="Neuen Eintrag hinzufügen">
+      <h2 id="form-heading">Neu eintragen</h2>
+      <div class="form-card">
+        <form id="entry-form">
+          <div class="type-toggle" role="radiogroup" aria-label="Einnahme oder Ausgabe">
+            <label id="label-einnahme" class="opt-einnahme">
+              <input type="radio" name="entry-type" value="einnahme" checked>
+              <span>Einnahme (+)</span>
+            </label>
+            <label id="label-ausgabe" class="opt-ausgabe">
+              <input type="radio" name="entry-type" value="ausgabe">
+              <span>Ausgabe (−)</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="amount">Wie viel Geld?</label>
+            <div class="amount-wrap">
+              <input type="text" inputmode="decimal" id="amount" placeholder="0,00" required autocomplete="off">
+              <span>€</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" id="cat-label">Welcher Bereich?</label>
+            <div class="category-grid" id="category-grid" role="radiogroup" aria-labelledby="cat-label"></div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="entry-date">Wann?</label>
+            <input type="date" id="entry-date" required>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="note">Notiz (nicht Pflicht)</label>
+            <textarea id="note" placeholder="Zum Beispiel: Miete Juli" maxlength="80"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary" id="submit-btn">Eintrag speichern</button>
+          <button type="button" class="btn-secondary" id="cancel-edit" style="display:none;">Abbrechen</button>
+        </form>
+      </div>
+    </section>
+
+    <section aria-label="Deine Einträge">
+      <h2>Deine Einträge diesen Monat</h2>
+      <div id="entries-list"></div>
+      <p class="empty-hint" id="entries-empty" style="display:none;">
+        Du hast diesen Monat noch nichts eingetragen. Trage oben deine erste Einnahme oder Ausgabe ein.
+      </p>
+    </section>
+
+    <section aria-label="Daten exportieren">
+      <h2>Daten mitnehmen</h2>
+      <div class="export-row">
+        <button type="button" id="export-csv">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+          Als Tabelle (CSV)
+        </button>
+        <button type="button" id="export-pdf">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><path d="M14 2v6h6"/></svg>
+          Als PDF drucken
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="info">
+    Deine Daten bleiben auf deinem Handy. Sie werden nicht ins Internet geschickt.
+  </footer>
+
+</div>
+
+<div id="print-report">
+  <h1>Mein Haushaltsbuch</h1>
+  <div id="print-month"></div>
+  <div id="print-summary"></div>
+  <table id="print-table">
+    <thead><tr><th>Datum</th><th>Art</th><th>Bereich</th><th>Notiz</th><th>Betrag</th></tr></thead>
+    <tbody id="print-tbody"></tbody>
+  </table>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Kategorien mit einfachen Symbolen ---------- */
+  var ICON = {
+    lohn: '<path d="M3 7h18v10H3z"/><circle cx="12" cy="12" r="2.5"/><path d="M3 10a3 3 0 0 0 3-3M21 10a3 3 0 0 1-3-3M3 14a3 3 0 0 1 3 3M21 14a3 3 0 0 0-3 3"/>',
+    geschenk: '<path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7C9 7 8 3 10.5 2.5 13 2 12 7 12 7Z"/><path d="M12 7c3 0 4-4 1.5-4.5C11 2 12 7 12 7Z"/>',
+    dokument: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/>',
+    plus: '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+    haus: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/>',
+    essen: '<path d="M6 2v8a2 2 0 0 0 4 0V2"/><path d="M8 10v12"/><path d="M17 2c-1.5 0-3 1.5-3 4v3h3M17 2v20"/>',
+    auto: '<path d="M3 13l1.5-5A2 2 0 0 1 6.4 6.5h11.2A2 2 0 0 1 19.5 8L21 13"/><path d="M3 13h18v5H3z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/>',
+    schutz: '<path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5z"/>',
+    gesundheit: '<path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 21l8.8-7.3a5 5 0 0 0 0-7.1z"/>',
+    freizeit: '<path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.8 5.8 20.3l1.6-6.8-5.2-4.6 6.9-.6z"/>',
+    kleidung: '<path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7z"/>',
+    mehr: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'
+  };
+  function svg(iconKey) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[iconKey] + '</svg>';
+  }
+
+  var CATEGORIES = {
+    einnahme: [
+      { id: "lohn", label: "Lohn", icon: "lohn" },
+      { id: "kindergeld", label: "Kindergeld", icon: "geschenk" },
+      { id: "sozialleistung", label: "Sozialleistung", icon: "dokument" },
+      { id: "sonstige_einnahme", label: "Sonstiges", icon: "plus" }
+    ],
+    ausgabe: [
+      { id: "wohnen", label: "Wohnen", icon: "haus" },
+      { id: "essen", label: "Essen", icon: "essen" },
+      { id: "verkehr", label: "Verkehr", icon: "auto" },
+      { id: "versicherung", label: "Versicherung", icon: "schutz" },
+      { id: "gesundheit", label: "Gesundheit", icon: "gesundheit" },
+      { id: "freizeit", label: "Freizeit", icon: "freizeit" },
+      { id: "kleidung", label: "Kleidung", icon: "kleidung" },
+      { id: "sonstige_ausgabe", label: "Sonstiges", icon: "mehr" }
+    ]
+  };
+  var CAT_COLORS = ["#1a365d", "#2b7a78", "#c05621", "#6b46c1", "#2f855a", "#b7791f", "#9b2c2c", "#4a5568"];
+
+  function findCategory(type, id) {
+    var list = CATEGORIES[type] || [];
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+
+  /* ---------- Daten ---------- */
+  var STORAGE_KEY = "hb_eintraege_v1";
+  var entries = [];
+  try { entries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { entries = []; }
+  function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(entries)); }
+
+  var today = new Date();
+  var currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  var editingId = null;
+
+  var fmtEUR = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
+  var fmtMonth = new Intl.DateTimeFormat("de-DE", { month: "long", year: "numeric" });
+  var fmtDay = new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long" });
+
+  function monthKey(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); }
+  function entryMonthKey(entry) { return entry.date.slice(0, 7); }
+  function entriesForMonth(d) {
+    var mk = monthKey(d);
+    return entries.filter(function (e) { return entryMonthKey(e) === mk; });
+  }
+
+  /* ---------- Rendering: Kategorie-Auswahl ---------- */
+  var grid = document.getElementById("category-grid");
+  var selectedCategory = null;
+
+  function renderCategoryGrid(type) {
+    grid.innerHTML = "";
+    var list = CATEGORIES[type];
+    list.forEach(function (cat) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "category-btn" + (selectedCategory === cat.id ? " selected" : "");
+      btn.setAttribute("role", "radio");
+      btn.setAttribute("aria-checked", selectedCategory === cat.id ? "true" : "false");
+      btn.dataset.catId = cat.id;
+      btn.innerHTML = svg(cat.icon) + "<span>" + cat.label + "</span>";
+      btn.addEventListener("click", function () {
+        selectedCategory = cat.id;
+        renderCategoryGrid(type);
+      });
+      grid.appendChild(btn);
+    });
+    if (!selectedCategory && list.length) { selectedCategory = null; }
+  }
+
+  var radios = document.querySelectorAll('input[name="entry-type"]');
+  var labelEinnahme = document.getElementById("label-einnahme");
+  var labelAusgabe = document.getElementById("label-ausgabe");
+  function currentType() {
+    var checked = document.querySelector('input[name="entry-type"]:checked');
+    return checked ? checked.value : "einnahme";
+  }
+  function updateTypeStyles() {
+    var t = currentType();
+    labelEinnahme.classList.toggle("active-einnahme", t === "einnahme");
+    labelAusgabe.classList.toggle("active-ausgabe", t === "ausgabe");
+  }
+  radios.forEach(function (r) {
+    r.addEventListener("change", function () {
+      selectedCategory = null;
+      updateTypeStyles();
+      renderCategoryGrid(currentType());
+    });
+  });
+
+  /* ---------- Monatsnavigation ---------- */
+  document.getElementById("prev-month").addEventListener("click", function () {
+    currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+    renderAll();
+  });
+  document.getElementById("next-month").addEventListener("click", function () {
+    currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1);
+    renderAll();
+  });
+
+  /* ---------- Formular: Absenden ---------- */
+  var form = document.getElementById("entry-form");
+  var amountInput = document.getElementById("amount");
+  var dateInput = document.getElementById("entry-date");
+  var noteInput = document.getElementById("note");
+  var submitBtn = document.getElementById("submit-btn");
+  var cancelBtn = document.getElementById("cancel-edit");
+  var formHeading = document.getElementById("form-heading");
+
+  dateInput.value = today.toISOString().slice(0, 10);
+
+  form.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var rawAmount = amountInput.value.replace(",", ".").trim();
+    var amount = parseFloat(rawAmount);
+    if (isNaN(amount) || amount <= 0) {
+      amountInput.focus();
+      amountInput.style.borderColor = "var(--expense)";
+      return;
+    }
+    if (!selectedCategory) {
+      grid.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    if (!dateInput.value) { dateInput.focus(); return; }
+
+    var type = currentType();
+    var data = {
+      id: editingId || (Date.now() + "_" + Math.random().toString(36).slice(2, 7)),
+      type: type,
+      amount: Math.round(amount * 100) / 100,
+      category: selectedCategory,
+      date: dateInput.value,
+      note: noteInput.value.trim().slice(0, 80)
+    };
+
+    if (editingId) {
+      entries = entries.map(function (e) { return e.id === editingId ? data : e; });
+    } else {
+      entries.push(data);
+    }
+    save();
+    resetForm();
+    currentMonth = new Date(parseInt(data.date.slice(0,4),10), parseInt(data.date.slice(5,7),10) - 1, 1);
+    renderAll();
+  });
+
+  cancelBtn.addEventListener("click", resetForm);
+
+  function resetForm() {
+    editingId = null;
+    form.reset();
+    dateInput.value = today.toISOString().slice(0, 10);
+    selectedCategory = null;
+    amountInput.style.borderColor = "";
+    updateTypeStyles();
+    renderCategoryGrid(currentType());
+    submitBtn.textContent = "Eintrag speichern";
+    cancelBtn.style.display = "none";
+    formHeading.textContent = "Neu eintragen";
+  }
+
+  function startEdit(entry) {
+    editingId = entry.id;
+    document.querySelector('input[name="entry-type"][value="' + entry.type + '"]').checked = true;
+    updateTypeStyles();
+    selectedCategory = entry.category;
+    renderCategoryGrid(entry.type);
+    amountInput.value = String(entry.amount).replace(".", ",");
+    dateInput.value = entry.date;
+    noteInput.value = entry.note || "";
+    submitBtn.textContent = "Änderung speichern";
+    cancelBtn.style.display = "block";
+    formHeading.textContent = "Eintrag bearbeiten";
+    document.getElementById("form-heading").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function deleteEntry(id) {
+    if (!confirm("Diesen Eintrag wirklich löschen?")) return;
+    entries = entries.filter(function (e) { return e.id !== id; });
+    save();
+    renderAll();
+  }
+
+  /* ---------- Rendering: Überblick ---------- */
+  function renderSummary(list) {
+    var income = 0, expense = 0;
+    list.forEach(function (e) { if (e.type === "einnahme") income += e.amount; else expense += e.amount; });
+    document.getElementById("sum-income").textContent = fmtEUR.format(income);
+    document.getElementById("sum-expense").textContent = fmtEUR.format(expense);
+    document.getElementById("sum-balance").textContent = fmtEUR.format(income - expense);
+    document.getElementById("sum-balance").style.color = (income - expense) < 0 ? "var(--expense)" : "var(--navy)";
+    return { income: income, expense: expense };
+  }
+
+  /* ---------- Rendering: Balkendiagramm, 6 Monate ---------- */
+  function renderBarChart() {
+    var months = [];
+    for (var i = 5; i >= 0; i--) {
+      months.push(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - i, 1));
+    }
+    var data = months.map(function (m) {
+      var list = entriesForMonth(m);
+      var inc = 0, exp = 0;
+      list.forEach(function (e) { if (e.type === "einnahme") inc += e.amount; else exp += e.amount; });
+      return { m: m, inc: inc, exp: exp };
+    });
+    var max = Math.max(1, Math.max.apply(null, data.map(function (d) { return Math.max(d.inc, d.exp); })));
+    var chartH = 120, baseY = 140, colW = 320 / 6, barW = 11;
+    var parts = [];
+    parts.push('<line x1="0" y1="' + baseY + '" x2="320" y2="' + baseY + '" stroke="#e2e8f0" stroke-width="1"/>');
+    data.forEach(function (d, idx) {
+      var cx = idx * colW + colW / 2;
+      var hInc = (d.inc / max) * chartH;
+      var hExp = (d.exp / max) * chartH;
+      parts.push('<rect x="' + (cx - barW - 2) + '" y="' + (baseY - hInc) + '" width="' + barW + '" height="' + hInc + '" rx="2.5" fill="var(--income)"></rect>');
+      parts.push('<rect x="' + (cx + 2) + '" y="' + (baseY - hExp) + '" width="' + barW + '" height="' + hExp + '" rx="2.5" fill="var(--expense)"></rect>');
+      var lbl = new Intl.DateTimeFormat("de-DE", { month: "short" }).format(d.m);
+      parts.push('<text x="' + cx + '" y="' + (baseY + 15) + '" font-size="9" fill="#718096" text-anchor="middle">' + lbl + '</text>');
+    });
+    document.getElementById("bar-chart").innerHTML = parts.join("");
+  }
+
+  /* ---------- Rendering: Donut-Diagramm, Ausgaben nach Kategorie ---------- */
+  function renderDonut(list) {
+    var expenses = list.filter(function (e) { return e.type === "ausgabe"; });
+    var svgEl = document.getElementById("donut-chart");
+    var legendEl = document.getElementById("donut-legend");
+    var emptyEl = document.getElementById("donut-empty");
+    legendEl.innerHTML = "";
+    if (!expenses.length) {
+      svgEl.innerHTML = '<circle cx="80" cy="80" r="60" fill="none" stroke="#e2e8f0" stroke-width="20"/>';
+      emptyEl.style.display = "block";
+      return;
+    }
+    emptyEl.style.display = "none";
+    var totals = {};
+    expenses.forEach(function (e) { totals[e.category] = (totals[e.category] || 0) + e.amount; });
+    var catIds = CATEGORIES.ausgabe.map(function (c) { return c.id; });
+    var sum = 0;
+    catIds.forEach(function (id) { sum += totals[id] || 0; });
+
+    var r = 60, cx = 80, cy = 80, circumference = 2 * Math.PI * r;
+    var offset = 0;
+    var parts = [];
+    catIds.forEach(function (id, idx) {
+      var val = totals[id] || 0;
+      if (!val) return;
+      var frac = val / sum;
+      var dash = frac * circumference;
+      var color = CAT_COLORS[idx % CAT_COLORS.length];
+      parts.push('<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="20" stroke-dasharray="' + dash + ' ' + circumference + '" stroke-dashoffset="' + (-offset) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>');
+      offset += dash;
+      var cat = findCategory("ausgabe", id);
+      var li = document.createElement("span");
+      li.className = "item";
+      li.innerHTML = '<span class="dot" style="background:' + color + ';"></span>' + cat.label + ': ' + fmtEUR.format(val);
+      legendEl.appendChild(li);
+    });
+    svgEl.innerHTML = parts.join("");
+  }
+
+  /* ---------- Rendering: Liste der Einträge ---------- */
+  function renderEntries(list) {
+    var wrap = document.getElementById("entries-list");
+    var emptyEl = document.getElementById("entries-empty");
+    wrap.innerHTML = "";
+    if (!list.length) { emptyEl.style.display = "block"; return; }
+    emptyEl.style.display = "none";
+
+    var sorted = list.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+    var groups = {};
+    var order = [];
+    sorted.forEach(function (e) {
+      if (!groups[e.date]) { groups[e.date] = []; order.push(e.date); }
+      groups[e.date].push(e);
+    });
+
+    order.forEach(function (dateStr) {
+      var groupDiv = document.createElement("div");
+      groupDiv.className = "day-group";
+      var label = document.createElement("div");
+      label.className = "day-label";
+      label.textContent = fmtDay.format(new Date(dateStr + "T00:00:00"));
+      groupDiv.appendChild(label);
+
+      groups[dateStr].forEach(function (entry) {
+        var cat = findCategory(entry.type, entry.category) || { label: "Sonstiges", icon: "mehr" };
+        var row = document.createElement("div");
+        row.className = "entry type-" + entry.type;
+        row.innerHTML =
+          '<div class="icon-wrap">' + svg(cat.icon) + '</div>' +
+          '<div class="info">' +
+            '<div class="cat">' + cat.label + '</div>' +
+            (entry.note ? '<div class="note">' + escapeHtml(entry.note) + '</div>' : '') +
+          '</div>' +
+          '<div class="amount">' + (entry.type === "einnahme" ? "+ " : "− ") + fmtEUR.format(entry.amount) + '</div>' +
+          '<div class="row-actions">' +
+            '<button type="button" class="edit-btn" aria-label="Bearbeiten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>' +
+            '<button type="button" class="delete-btn" aria-label="Löschen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>' +
+          '</div>';
+        row.querySelector(".edit-btn").addEventListener("click", function () { startEdit(entry); });
+        row.querySelector(".delete-btn").addEventListener("click", function () { deleteEntry(entry.id); });
+        groupDiv.appendChild(row);
+      });
+      wrap.appendChild(groupDiv);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  /* ---------- Export ---------- */
+  document.getElementById("export-csv").addEventListener("click", function () {
+    var list = entriesForMonth(currentMonth).slice().sort(function (a, b) { return a.date.localeCompare(b.date); });
+    var rows = [["Datum", "Art", "Bereich", "Notiz", "Betrag in Euro"]];
+    list.forEach(function (e) {
+      var cat = findCategory(e.type, e.category);
+      rows.push([e.date, e.type === "einnahme" ? "Einnahme" : "Ausgabe", cat ? cat.label : "", e.note || "", String(e.amount).replace(".", ",")]);
+    });
+    var csv = rows.map(function (r) {
+      return r.map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(";");
+    }).join("\r\n");
+    var blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "haushaltsbuch_" + monthKey(currentMonth) + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  document.getElementById("export-pdf").addEventListener("click", function () {
+    var list = entriesForMonth(currentMonth).slice().sort(function (a, b) { return a.date.localeCompare(b.date); });
+    var totals = renderSummary(list);
+    document.getElementById("print-month").innerHTML = "<p>" + fmtMonth.format(currentMonth) + "</p>";
+    document.getElementById("print-summary").innerHTML =
+      "<p>Einnahmen: " + fmtEUR.format(totals.income) + " &nbsp; Ausgaben: " + fmtEUR.format(totals.expense) +
+      " &nbsp; Bleibt übrig: " + fmtEUR.format(totals.income - totals.expense) + "</p>";
+    var tbody = document.getElementById("print-tbody");
+    tbody.innerHTML = "";
+    list.forEach(function (e) {
+      var cat = findCategory(e.type, e.category);
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + e.date.split("-").reverse().join(".") + "</td>" +
+        "<td>" + (e.type === "einnahme" ? "Einnahme" : "Ausgabe") + "</td>" +
+        "<td>" + (cat ? cat.label : "") + "</td>" +
+        "<td>" + escapeHtml(e.note || "") + "</td>" +
+        "<td>" + (e.type === "einnahme" ? "+ " : "− ") + fmtEUR.format(e.amount) + "</td>";
+      tbody.appendChild(tr);
+    });
+    window.print();
+  });
+
+  /* ---------- Gesamt-Render ---------- */
+  function renderAll() {
+    document.getElementById("month-label").textContent = fmtMonth.format(currentMonth);
+    var list = entriesForMonth(currentMonth);
+    renderSummary(list);
+    renderBarChart();
+    renderDonut(list);
+    renderEntries(list);
+  }
+
+  updateTypeStyles();
+  renderCategoryGrid(currentType());
+  renderAll();
+
+  /* ---------- Installierbar als App ---------- */
+  var deferredPrompt = null;
+  var banner = document.getElementById("install-banner");
+  var installBtn = document.getElementById("install-btn");
+  var installText = document.getElementById("install-text");
+
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    banner.classList.add("show");
+  });
+  installBtn.addEventListener("click", function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function () {
+      deferredPrompt = null;
+      banner.classList.remove("show");
+    });
+  });
+  var isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+  if (isIos && !isStandalone) {
+    installText.textContent = "Tippe unten auf Teilen und dann auf „Zum Home-Bildschirm“.";
+    installBtn.style.display = "none";
+    banner.classList.add("show");
+  }
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
