@@ -1,4 +1,4 @@
-# Haushaltsbuch
+# Mein Haushaltsbuch
 
 Copyright © 2026 Elisabeth Vanderheiden.
 
