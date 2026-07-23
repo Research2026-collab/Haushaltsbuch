@@ -6,7 +6,7 @@ Copyright © 2026 Elisabeth Vanderheiden.
 
 ## Deutsch
 
-**Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung**
+**Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung**
 
 Eine interaktive Anwendung zur Haushaltsplanung in Einfacher Sprache, die Menschen mit Grundbildungsbedarf, kognitiven Beeinträchtigungen oder begrenzten Finanzkenntnissen dabei helfen soll, Einnahmen und Ausgaben selbstständig zu erfassen.
 
@@ -48,7 +48,7 @@ Elisabeth Vanderheiden
 
 Bitte zitieren Sie Version 1.0.0 dieser Software wie folgt:
 
-Vanderheiden, E. (2026). *Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung* (Version 1.0.0) [Computersoftware]. Zenodo. https://doi.org/10.5281/zenodo.21505353
+Vanderheiden, E. (2026). *Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung* (Version 1.0.0) [Computersoftware]. Zenodo. https://doi.org/10.5281/zenodo.21505353
 
 ### Lizenz
 
@@ -66,7 +66,7 @@ Grundbildung, Einfache Sprache, Finanzbildung, Budgetplanung, Barrierefreiheit, 
 
 ## English
 
-**Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management**
+**Mein Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management**
 
 An interactive household budgeting application in Simple German (Einfache Sprache), designed to help adults with basic education needs, cognitive impairments or limited financial literacy record income and expenses independently.
 
@@ -108,7 +108,7 @@ Elisabeth Vanderheiden
 
 Please cite version 1.0.0 of this software as:
 
-Vanderheiden, E. (2026). *Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21505353
+Vanderheiden, E. (2026). *Mein Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21505353
 
 ### Licence
 
