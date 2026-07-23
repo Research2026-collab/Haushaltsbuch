@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "Bitte zitieren Sie diese Software wie folgt / Please cite this software as below."
+type: software
+title: "Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung"
+authors:
+  - family-names: Vanderheiden
+    given-names: Elisabeth
+version: 1.0.0
+date-released: 2026-07-23
+doi: 10.5281/zenodo.21505353
+url: "https://research2026-collab.github.io/Haushaltsbuch/"
+repository-code: "https://github.com/research2026-collab/Haushaltsbuch"
+license: CC-BY-NC-4.0
+keywords:
+  - Grundbildung
+  - Einfache Sprache
+  - Finanzbildung
+  - Budgetplanung
+  - Barrierefreiheit
+  - Behinderung
+  - Legasthenie
+  - Inklusion
+  - digitale Teilhabe
+  - Selbstbestimmtes Leben
