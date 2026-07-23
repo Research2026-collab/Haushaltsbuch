@@ -51,9 +51,8 @@ Elisabeth Vanderheiden
 
 Please cite version 1.0.0 of this software as:
 
-Vanderheiden, E. (2026). *Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+Vanderheiden, E. (2026). *Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. 10.5281/zenodo.21505353
 
-*(DOI to be updated once the corresponding Zenodo record has been minted.)*
 
 ## Licence
 
