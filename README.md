@@ -1,34 +1,68 @@
-# Mein Haushaltsbuch
+# Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management
 
-Eine installierbare Web-App (PWA) in einfacher Sprache. Menschen tragen ihre Einnahmen und Ausgaben ein und sehen auf einen Blick, was übrig bleibt. Alle Daten bleiben auf dem jeweiligen Gerät, gespeichert im `localStorage` des Browsers. Es gibt keinen Server und keine Anmeldung.
+Copyright © 2026 Elisabeth Vanderheiden.
 
-## Dateien
+An interactive household budgeting application in Simple German (Einfache Sprache), designed to help people with reading difficulties, cognitive impairments or limited financial literacy record income and expenses independently.
 
-| Datei | Zweck |
-| --- | --- |
-| `index.html` | Die App selbst: Formular, Übersicht, Diagramme, Export |
-| `manifest.json` | Beschreibt die App fürs Betriebssystem, macht sie installierbar |
-| `sw.js` | Service Worker, sorgt für Offline-Nutzung |
-| `icons/` | App-Icons in den benötigten Größen |
+## Overview
 
-## Veröffentlichung auf GitHub Pages
+Haushaltsbuch supports self-determined financial record-keeping by combining a reduced, accessible interface with categories that reflect the everyday income and expense situations of people receiving disability-related benefits, workshop wages or family allowances. The application runs entirely in the browser and stores all entries locally on the user's own device, so that no personal financial data is transmitted to any server.
 
-Lege in deinem Repository einen Ordner an, zum Beispiel `haushaltsbuch`, und lade alle Dateien aus diesem Paket dort hinein, inklusive des Ordners `icons`. Öffne danach in den Repository-Einstellungen den Punkt „Pages“. Wähle als Quelle den Branch, in dem die Dateien liegen, und als Ordner entweder `/root` oder `/haushaltsbuch`, je nachdem, wo die Datei `index.html` liegt. GitHub zeigt danach eine Adresse an, unter der die Seite erreichbar ist, etwa `https://dein-name.github.io/dein-repo/haushaltsbuch/`.
+Users record entries as either income or expense, assign a category, enter an amount and a date, and may add an optional note. The application then provides:
 
-Wichtig ist, dass `index.html`, `manifest.json`, `sw.js` und der Ordner `icons` im selben Verzeichnis liegen, weil die App-Datei mit relativen Pfaden auf sie verweist.
+* a monthly overview of income, expenses and the remaining balance
+* a six-month comparison chart of income and expenses
+* a category breakdown of the current month's expenses, shown as a donut chart
+* a chronological list of all entries for the current month
+* export of all entries as a CSV table or as a printable PDF
 
-## Installation auf dem Handy, ohne App Store
+## Categories
 
-Auf einem Android-Gerät öffnet man die Adresse im Chrome-Browser. Nach kurzer Zeit erscheint innerhalb der App ein Hinweisfeld mit der Schaltfläche „App installieren“. Alternativ lässt sich das Menü rechts oben im Browser öffnen und dort „App installieren“ oder „Zum Startbildschirm hinzufügen“ auswählen.
+Income categories include Lohn (wages), Werkstatt-Entgelt (workshop wages), Kindergeld (child benefit), Sozialleistung (social benefit) and Geldgeschenk (monetary gift), alongside a general Sonstiges (other) category. Expense categories include Wohnen (housing), Internet, Essen (food), Verkehr (transport), Versicherung (insurance), Gesundheit (health), Freizeit (leisure) and Kleidung (clothing), alongside Sonstiges (other).
 
-Auf einem iPhone oder iPad öffnet man die Adresse in Safari. Dort zeigt die App automatisch einen Hinweis, dass man auf das Teilen-Symbol tippen und dann „Zum Home-Bildschirm“ wählen soll. Der App Store wird in beiden Fällen nicht benötigt.
+## Purpose
 
-## Funktionen im Überblick
+The tool addresses a gap in existing budgeting applications, most of which assume a level of reading fluency, financial vocabulary and digital literacy that excludes many people with disabilities or learning difficulties. By using Simple German throughout, a reduced set of categories, and a data model that requires no account creation or internet connection, Haushaltsbuch aims to make basic financial self-management accessible to a wider group of users.
 
-Einnahmen und Ausgaben lassen sich einzeln mit Betrag, Bereich, Datum und einer kurzen Notiz eintragen. Die Startseite zeigt für den gewählten Monat die Summe der Einnahmen, der Ausgaben und den Betrag, der übrig bleibt. Ein Balkendiagramm vergleicht die letzten sechs Monate, ein Kreisdiagramm zeigt, wofür im aktuellen Monat Geld ausgegeben wurde. Über die Monatspfeile lässt sich zwischen den Monaten wechseln, auch für vergangene Einträge.
+## Intended Users
 
-Für die eigene Ablage lassen sich die Einträge eines Monats als CSV-Tabelle herunterladen, die sich in Excel oder LibreOffice öffnen lässt, oder als PDF über die Druckfunktion des Browsers sichern.
+* people with dyslexia, cognitive impairments or intellectual disabilities
+* participants in sheltered workshops (Werkstätten für Menschen mit Behinderung)
+* adult education providers and support workers accompanying financial literacy training
+* trainers and coaches in inclusive education settings
 
-## Änderungen und Weiterentwicklung
+## Technical Notes
 
-Farben, Schrift und Aufbau orientieren sich am bestehenden MoTiF-Design mit Navy und Petrol als Leitfarben. Neue Kategorien lassen sich im Abschnitt `CATEGORIES` in `index.html` ergänzen, neue Symbole im Abschnitt `ICON` direkt darüber. Beide Abschnitte stehen am Anfang des `<script>`-Bereichs.
+The application is built as a static, installable Progressive Web App (PWA). It can be added to a mobile home screen and used offline once loaded, through a service worker that caches the application shell locally. No backend, database or account system is used. All data remains in the browser's local storage on the user's own device.
+
+## Live Application
+
+https://research2026-collab.github.io/Haushaltsbuch/
+
+## Funding
+
+Entwickelt im Rahmen des Projektes Inklusion - ToolCheck, gefördert vom Ministerium für Wissenschaft, Weiterbildung und Gesundheit Rheinland-Pfalz, AZ 53 18-202616/32-ZE.
+
+## Author
+
+Elisabeth Vanderheiden
+
+## Citation
+
+Please cite version 1.0.0 of this software as:
+
+Vanderheiden, E. (2026). *Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.XXXXXXX
+
+*(DOI to be updated once the corresponding Zenodo record has been minted.)*
+
+## Licence
+
+The educational content of this repository, including the category descriptions, information texts and accompanying materials, is licensed under the Creative Commons Attribution-NonCommercial 4.0 International Licence (CC BY-NC 4.0).
+
+The source code of this application is provided for access to the published web application only. All rights to the source code are reserved. No permission is granted to copy, redistribute, modify or use the source code except where required by applicable law or with the prior written permission of the copyright holder.
+
+Icons and other third-party materials remain the property of their respective copyright holders.
+
+## Keywords
+
+Simple language, financial education, budgeting, accessibility, disability, dyslexia, inclusion, digital participation

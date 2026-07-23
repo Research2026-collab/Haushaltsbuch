@@ -7,8 +7,8 @@
 <meta name="description" content="Trage deine Einnahmen und Ausgaben ein. Einfach und in deiner Sprache.">
 <meta name="theme-color" content="#1a365d">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Haushaltsbuch">
@@ -459,7 +459,7 @@
           </div>
 
           <div class="field">
-            <label class="field-label" for="note">Notiz (nicht Pflicht)</label>
+            <label class="field-label" for="note">Notiz (freiwillig)</label>
             <textarea id="note" placeholder="Zum Beispiel: Miete Juli" maxlength="80"></textarea>
           </div>
 
@@ -526,7 +526,8 @@
     gesundheit: '<path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 21l8.8-7.3a5 5 0 0 0 0-7.1z"/>',
     freizeit: '<path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 16.8 5.8 20.3l1.6-6.8-5.2-4.6 6.9-.6z"/>',
     kleidung: '<path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7z"/>',
-    mehr: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'
+    mehr: '<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',
+    internet: '<path d="M2 8.5a15.7 15.7 0 0 1 20 0"/><path d="M5.5 12.5a10.8 10.8 0 0 1 13 0"/><path d="M9 16.5a5.9 5.9 0 0 1 6 0"/><circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/>'
   };
   function svg(iconKey) {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ICON[iconKey] + '</svg>';
@@ -535,12 +536,15 @@
   var CATEGORIES = {
     einnahme: [
       { id: "lohn", label: "Lohn", icon: "lohn" },
+      { id: "werkstatt_entgelt", label: "Werkstatt-Entgelt", icon: "lohn" },
       { id: "kindergeld", label: "Kindergeld", icon: "geschenk" },
       { id: "sozialleistung", label: "Sozialleistung", icon: "dokument" },
+      { id: "geldgeschenk", label: "Geldgeschenk", icon: "geschenk" },
       { id: "sonstige_einnahme", label: "Sonstiges", icon: "plus" }
     ],
     ausgabe: [
       { id: "wohnen", label: "Wohnen", icon: "haus" },
+      { id: "internet", label: "Internet", icon: "internet" },
       { id: "essen", label: "Essen", icon: "essen" },
       { id: "verkehr", label: "Verkehr", icon: "auto" },
       { id: "versicherung", label: "Versicherung", icon: "schutz" },
