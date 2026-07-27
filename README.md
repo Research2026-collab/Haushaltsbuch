@@ -1,12 +1,15 @@
 # Mein Haushaltsbuch
 
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![DOI](https://zenodo.org/badge/1287092543.svg)](https://doi.org/10.5281/zenodo.21505352)
+
 Copyright © 2026 Elisabeth Vanderheiden.
 
 ---
 
 ## Deutsch
 
-**Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung**
+### Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung
 
 Eine interaktive Anwendung zur Haushaltsplanung in Einfacher Sprache, die Menschen mit Grundbildungsbedarf, kognitiven Beeinträchtigungen oder begrenzten Finanzkenntnissen dabei helfen soll, Einnahmen und Ausgaben selbstständig zu erfassen.
 
@@ -26,7 +29,7 @@ Das Tool schließt eine Lücke bei bestehenden Haushaltsplanungs-Apps, von denen
 
 ### Zielgruppe
 
-Menschen mit Grundbildungsbedarf, kognitiven Beeinträchtigungen oder geistigen Behinderungen, Teilnehmer*innen in Werkstätten für Menschen mit Behinderung, Anbieter:innen von Erwachsenenbildung und Betreuer*innen, die Schulungen zur finanziellen Grundkompetenz begleiten, sowie Ausbilder*innen und Coach*innen in inklusiven Bildungsumgebungen.
+Menschen mit Grundbildungsbedarf, kognitiven Beeinträchtigungen oder geistigen Behinderungen, Teilnehmerinnen in Werkstätten für Menschen mit Behinderung, Anbieter:innen von Erwachsenenbildung und Betreuerinnen, die Schulungen zur finanziellen Grundkompetenz begleiten, sowie Ausbilderinnen und Coachinnen in inklusiven Bildungsumgebungen.
 
 ### Technische Hinweise
 
@@ -43,13 +46,14 @@ Entwickelt im Rahmen des Projekts „Inklusion – ToolCheck", gefördert vom Mi
 ### Autorin
 
 Elisabeth Vanderheiden
-Für die Erstellung des  Quelltextes dieser Anwendung wurde Claude Sonnet 5, ein KI-Modell von Anthropic, genutzt. Die inhaltliche Konzeption, die Entwicklung der Anwendungsidee, die Festlegung der Anforderungen sowie sämtliche fachlichen und gestalterischen Entscheidungen stammen von Elisabeth Vanderheiden. 
+
+Für die Erstellung des Quelltextes dieser Anwendung wurde Claude Sonnet 5, ein KI-Modell von Anthropic, genutzt. Die inhaltliche Konzeption, die Entwicklung der Anwendungsidee, die Festlegung der Anforderungen sowie sämtliche fachlichen und gestalterischen Entscheidungen stammen von Elisabeth Vanderheiden.
 
 ### Zitierweise
 
 Bitte zitieren Sie Version 1.0.0 dieser Software wie folgt:
 
-Vanderheiden, E. (2026). *Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung* (Version 1.0.0) [Computersoftware]. Zenodo. https://doi.org/10.5281/zenodo.21505353
+> Vanderheiden, E. (2026). *Mein Haushaltsbuch – Ein Budgetierungstool in Einfacher Sprache für die tägliche Finanzverwaltung* (Version 1.0.0) [Computersoftware]. Zenodo. https://doi.org/10.5281/zenodo.21505353
 
 ### Lizenz
 
@@ -67,7 +71,7 @@ Grundbildung, Einfache Sprache, Finanzbildung, Budgetplanung, Barrierefreiheit, 
 
 ## English
 
-**Mein Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management**
+### Mein Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management
 
 An interactive household budgeting application in Simple German (Einfache Sprache), designed to help adults with basic education needs, cognitive impairments or limited financial literacy record income and expenses independently.
 
@@ -104,13 +108,14 @@ Developed within the project "Inklusion – ToolCheck", funded by the Ministry o
 ### Author
 
 Elisabeth Vanderheiden
+
 Claude Sonnet 5, an AI model developed by Anthropic, was used to generate the source code for this application. The conceptual design, the development of the application concept, the definition of the requirements, and all technical and design decisions were made by Elisabeth Vanderheiden.
 
 ### Citation
 
 Please cite version 1.0.0 of this software as:
 
-Vanderheiden, E. (2026). *Mein Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21505353
+> Vanderheiden, E. (2026). *Mein Haushaltsbuch – A Simple-Language Budgeting Tool for Everyday Financial Management* (Version 1.0.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.21505353
 
 ### Licence
 
